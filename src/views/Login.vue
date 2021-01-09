@@ -2,7 +2,7 @@
   <div class="absolute inset-0 w-screen h-screen flex justify-around items-center">
     <form
       @submit.prevent="loginWithEmailAndPassword"
-      class="flex flex-col border border-gray-500 rounded shadow p-4"
+      class="flex flex-col justify-evenly border border-gray-500 rounded shadow p-8 w-1/3 max-w-md h-1/2"
     >
       <div class="flex justify-center">
         <h1 class="text-3xl font-medium">Login</h1>
@@ -40,14 +40,13 @@
           Sign In With Google
         </button>
       </div>
-      <div>
+      <div class="flex justify-center">
         <a class="text-sm text-blue-700">Forgot Password</a>
-        <a class="text-sm text-blue-700">Create an Account</a>
       </div>
     </form>
     <form
       @submit.prevent="signUpWithEmailAndPassword"
-      class="flex flex-col border border-gray-500 rounded shadow p-4"
+      class="flex flex-col justify-evenly border border-gray-500 rounded shadow p-8 w-1/3 max-w-md h-1/2"
     >
       <div class="flex justify-center">
         <h1 class="text-3xl font-medium">Sign Up</h1>
@@ -86,9 +85,8 @@
           Sign Up With Google
         </button>
       </div>
-      <div>
+      <div v-show="false" class="flex justify-center">
         <a class="text-sm text-blue-700">Forgot Password</a>
-        <a class="text-sm text-blue-700">Create an Account</a>
       </div>
     </form>
   </div>
@@ -99,7 +97,7 @@ import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { state, setUser } from '@/store';
 
-import { auth, signInWithPopup } from '../firebase';
+import { auth, signInWithPopup, usersCollection } from '../firebase';
 
 export default {
   name: 'Login',
@@ -119,14 +117,14 @@ export default {
     const loginWithEmailAndPassword = async () => {
       if (loginForm.email !== '' && loginForm.password !== '') {
         try {
-          const user = await auth.signInWithEmailAndPassword(loginForm.email, loginForm.password);
+          const { user } = await auth.signInWithEmailAndPassword(loginForm.email, loginForm.password);
           const { displayName, email, uid } = user;
 
-          setUser({
-            displayName,
-            email,
-            uid,
-          });
+          const dbUser = await usersCollection.doc(uid).get();
+
+          if (dbUser.exists) {
+            setUser(dbUser.data());
+          }
         } catch (err) {
           setUser(null);
           console.error(err);
@@ -140,11 +138,25 @@ export default {
           const { user } = await auth.createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
           const { displayName, email, uid } = user;
 
-          setUser({
-            displayName,
-            email,
-            uid,
-          });
+          const dbUser = await usersCollection.doc(uid).get();
+
+          if (!dbUser.exists) {
+            await usersCollection.doc(uid).set({
+              displayName: displayName || email,
+              email,
+              id: uid,
+              uid,
+            });
+
+            setUser({
+              displayName: displayName || email,
+              email,
+              id: uid,
+              uid,
+            });
+          } else {
+            console.log('user exists already create a toast to say this');
+          }
         } catch (err) {
           setUser(null);
           console.error(err);
