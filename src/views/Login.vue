@@ -28,7 +28,6 @@
       <div className="flex flex-col mt-3">
         <button
           type="submit"
-          @click="loginWithEmailAndPassword"
           className="p-1 mb-2 border border-black rounded shadow bg-black text-white text-sm font-medium font-rubik"
         >
           Sign In
