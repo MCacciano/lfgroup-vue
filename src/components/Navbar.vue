@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex justify-center border-b border-black font-roboto">
+  <nav class="sticky top-0 flex justify-center border-b border-black font-roboto">
     <div class="flex justify-between w-full max-w-screen-xl m-3">
       <div class="flex justify-start">
         <router-link :to="{ name: 'Dashboard' }">
