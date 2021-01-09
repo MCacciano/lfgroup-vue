@@ -4,6 +4,10 @@
 </template>
 
 <script>
+import { onMounted, onUnmounted } from 'vue';
+import { auth, signInWithPopup } from '@/firebase';
+import { state, setUser } from '@/store';
+
 import Navbar from '@/components/Navbar';
 
 export default {

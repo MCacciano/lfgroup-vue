@@ -7,26 +7,26 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: Home
   },
   {
     path: '/login',
     name: 'Login',
-    component: import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    component: import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
     component: import(/* webpackChunkName: "login" */ '../views/Dashboard.vue'),
     meta: {
-      requiresAuth: true,
-    },
-  },
+      requiresAuth: true
+    }
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
+  routes
 });
 
 router.beforeEach((to, from, next) => {
