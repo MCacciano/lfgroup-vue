@@ -23,4 +23,15 @@ googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 const signInWithPopup = () => auth.signInWithPopup(googleProvider);
 
-export { auth, store, signInWithPopup };
+const usersCollection = store.collection('users');
+const groupsCollection = store.collection('groups');
+const gamesCollection = store.collection('games');
+
+export {
+  auth,
+  store,
+  signInWithPopup,
+  usersCollection,
+  groupsCollection,
+  gamesCollection,
+};

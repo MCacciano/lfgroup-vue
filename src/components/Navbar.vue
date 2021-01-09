@@ -1,5 +1,7 @@
 <template>
-  <nav class="sticky top-0 flex justify-center border-b border-black font-roboto z-50">
+  <nav
+    class="sticky top-0 flex justify-center border-b border-black font-roboto z-50"
+  >
     <div class="flex justify-between w-full max-w-screen-xl m-3">
       <div class="flex justify-start">
         <router-link :to="{ name: 'Home' }">
@@ -9,15 +11,17 @@
         </router-link>
       </div>
       <ul class="flex justify-end items-center">
-        <router-link
-          :to="{ name: 'Dashboard' }"
-          class="mx-2 cursor-pointer"
-          active-class="font-semibold text-lg"
-          >Dashboard</router-link
-        >
-        <button v-if="showLogout" @click="logout" class="mx-2 cursor-pointer">
-          Logout
-        </button>
+        <template v-if="userIsLoggedIn">
+          <router-link
+            :to="{ name: 'Dashboard' }"
+            class="mx-2 cursor-pointer"
+            active-class="font-semibold text-lg"
+            >Dashboard</router-link
+          >
+          <button @click="logout" class="mx-2 cursor-pointer">
+            Logout
+          </button>
+        </template>
         <router-link
           v-else
           :to="{ name: 'Login' }"
@@ -47,19 +51,19 @@ export default {
       router.push({ name: 'Login' });
     };
 
-    const showLogout = ref(false);
+    const userIsLoggedIn = ref(false);
 
     watchEffect(() => {
       if (state.user) {
-        showLogout.value = true;
+        userIsLoggedIn.value = true;
         router.push({ name: 'Dashboard' });
       } else {
-        showLogout.value = false;
+        userIsLoggedIn.value = false;
       }
     });
 
-    return { auth, logout, showLogout, user: state.user };
-  }
+    return { auth, logout, userIsLoggedIn, user: state.user };
+  },
 };
 </script>
 
