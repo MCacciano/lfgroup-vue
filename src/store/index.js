@@ -10,7 +10,6 @@ export const getUser = computed(() => state.user);
 
 // mutations
 export const setUser = user => {
-  console.log('user', user);
   return (state.user = user);
 };
 
